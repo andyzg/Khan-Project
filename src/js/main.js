@@ -4,7 +4,7 @@ var $ = require('jquery');
 $(function() {
   new Controller({
     'whitelist': ['ForStatement'],
-    'blacklist': [],
+    'blacklist': ['IfStatement'],
     'has_structure': []
   });
 });

@@ -8,7 +8,7 @@ module.exports = (function() {
   };
 
   Controller.prototype.checkCode = function(code) {
-    var errorMessage = parser.parse(code, this.opts_);
+    var errorMessage = parser.validateCode(code, this.opts_);
     if (errorMessage) {
       this.handleError(errorMessage);
     } else {
