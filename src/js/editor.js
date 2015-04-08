@@ -7,16 +7,13 @@ module.exports = (function() {
   };
 
   Editor.prototype.initListeners_ = function() {
-    var runListener = this.onRun.bind(this);
-    $('#run-button').click(runListener);
+    var clickListener = this.onClick.bind(this);
+    $('#run-button').click(clickListener);
   };
 
-  Editor.prototype.onRun = function(e) {
-    this.controller_.checkCode(this.getCode());
-  };
-
-  Editor.prototype.getCode = function() {
-    return 'var a = 1;'
+  Editor.prototype.onClick = function(e) {
+    var code = $('#code').val();
+    this.controller_.checkCode(code);
   };
 
   return Editor;

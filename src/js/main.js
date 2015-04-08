@@ -2,5 +2,9 @@ var Controller = require('./controller.js');
 var $ = require('jquery');
 
 $(function() {
-  new Controller();
+  new Controller({
+    'whitelist': ['ForStatement'],
+    'blacklist': [],
+    'has_structure': []
+  });
 });
