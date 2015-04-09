@@ -1,8 +1,9 @@
 var esprima = require('esprima');
+var _ = require('underscore');
 
 /**
  * Ensures that the inputted code has all the statements in the whitelist.
- * @param {string} tree The parsed tree of the code being inputted.
+ * @param {Object} tree The parsed tree of the code being inputted.
  * @param {Array.<string>} blacklist An array of whitelisted statements.
  * @return {bool} If true, it has all of the whitelisted statements.
  * @private
@@ -19,7 +20,7 @@ function hasWhitelisted_(tree, whitelist) {
   for (var i = 0; i < body.length; i++) {
     var node = body[i];
     // If is a whitelisted element, remove from array.
-    var whitelistIndex = whitelist.indexOf(node['type']);
+    var whitelistIndex = _.indexOf(blacklist, node['type']);
     if (whitelistIndex !== -1) {
       whitelist.splice(whitelistIndex, 1);
     }
@@ -32,7 +33,7 @@ function hasWhitelisted_(tree, whitelist) {
 
 /**
  * Validates the code for the blacklist check.
- * @param {string} tree The parsed tree of the code being inputted.
+ * @param {Object} tree The parsed tree of the code being inputted.
  * @param {Array.<string>} blacklist An array of blacklisted statements.
  * @return {?string} An optional error message.
  * @private
@@ -61,9 +62,23 @@ function hasBlacklisted_(tree, blacklist) {
   return null;
 }
 
+/**
+ * Checks if the parse tree is roughly the same structure as required.
+ * @param {Object} tree The parse tree of the inputted code.
+ * @param {Object} structure The structure required for the code.
+ * @return {bool} If true, then the code follows the required structure.
+ */
 function checkStructure_(tree, structure) {
-  console.log(tree, 'structure!');
-  return null;
+  var body = tree['body'];
+  if (!body) {
+    return Object.keys(structure).length === 0;
+  }
+
+  for (var i = 0; i < body.length; i++) {
+    var node = body[i];
+    // TODO: Check structure.
+  }
+
 }
 
 /**
@@ -73,7 +88,7 @@ function checkStructure_(tree, structure) {
  * - A blacklist, where it makes sure the code doesn't use certain statements.
  * - A structure check that makes sure the code follows a certain structure.
  * @param {string} code The code being checked.
- * @param {Object.<string,Array>} opt An object containing the options. Field
+ * @param {Object.<string,Array|Object>} opt An object containing the options. Field
  *    options are whitelist, blacklist, and structure
  * @return {?string} An optional error message.
  */
@@ -81,7 +96,7 @@ exports.validateCode = function(code, opt) {
   var parsedCode = esprima.parse(code);
 
   if (opt['whitelist']) {
-    var whitelistedFuncs = opt['whitelist'] ? opt['whitelist'].slice() : [];
+    var whitelistedFuncs = opt['whitelist'].slice();
     var isValid = hasWhitelisted_(parsedCode, whitelistedFuncs);
     if (whitelistedFuncs.length !== 0) {
       // TODO: Fix the grammar in the error message.
@@ -92,16 +107,13 @@ exports.validateCode = function(code, opt) {
 
   // TODO: Check for valid syntax
   if (opt['blacklist']) {
-    var blacklistedFuncs = opt['blacklist'] ? opt['blacklist'].slice() : [];
-    var errorMessage = hasBlacklisted_(parsedCode, blacklistedFuncs);
+    var errorMessage = hasBlacklisted_(parsedCode, opt['blacklist']);
     if (errorMessage) {
       return errorMessage;
     }
   }
 
   if (opt['structure']) {
-    var requiredStructures = opt['structure'] ?
-      opt['structure'].slice : [];
     var structureErrorMsg = checkStructure_(parsedCode, opt['structure']);
     if (structureErrorMsg) {
       return structureErrorMsg;
