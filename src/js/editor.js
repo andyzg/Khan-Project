@@ -1,13 +1,14 @@
 var $ = require('jquery');
 
 module.exports = (function() {
+
   var Editor = function(controller) {
     this.controller_ = controller;
     this.initListeners_();
   };
 
   Editor.prototype.initListeners_ = function() {
-    var clickListener = this.onClick.bind(this);
+    var clickListener = _.bind(this.onClick, this);
     $('#run-button').click(clickListener);
   };
 
@@ -17,4 +18,5 @@ module.exports = (function() {
   };
 
   return Editor;
+
 })();
