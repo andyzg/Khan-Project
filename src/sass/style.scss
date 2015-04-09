@@ -1,7 +1,10 @@
-@import 'lib/normalize'
-@import 'lib/skeleton'
+@import 'compass/reset';
+@import 'lib/normalize';
+@import 'lib/skeleton';
 
 // Insert beautiful style here.
 body {
-  background-color: red;
+  div.container {
+    background-color: red;
+  }
 }

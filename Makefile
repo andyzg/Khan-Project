@@ -4,4 +4,4 @@ local:
 build:
 	mkdir -p static
 	browserify src/js/main.js | uglifyjs -c > static/bundle.js
-	sass src/sass/style.scss:static/style.css --style compressed
+	compass compile . --sass-dir=src/sass/ --css-dir=static --output compressed
