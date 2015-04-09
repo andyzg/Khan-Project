@@ -12,12 +12,13 @@ module.exports = (function() {
     if (errorMessage) {
       this.handleError(errorMessage);
     } else {
-      console.log('Success!');
+      alert('Success!');
     }
   };
 
   Controller.prototype.handleError = function(message) {
-    console.error(message);
+    // Handle the error in a better way.
+    alert(message);
   }
 
   return Controller;
