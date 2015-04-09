@@ -32,3 +32,5 @@ node_modules
 
 # Static directory. Gets build through make build
 static
+
+.DS_Store
