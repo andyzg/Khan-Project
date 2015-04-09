@@ -2,9 +2,24 @@ var esprima = require('esprima');
 var _ = require('underscore');
 
 /**
+ * Esprima returns an object as a body if there is only one child. This wraps
+ * it in an array to reuse code as well as checks if it exists.
+ * @param {Object} tree The target tree node.
+ * @return {?Array} An array of nodes belonging to the tree node's body.
+ * @private
+ */
+function getBody_(tree) {
+  var body = tree['body'];
+  if (!body) {
+    return null;
+  }
+  return _.isArray(body) ? body : [body];
+}
+
+/**
  * Ensures that the inputted code has all the statements in the whitelist.
  * @param {Object} tree The parsed tree of the code being inputted.
- * @param {Array.<string>} blacklist An array of whitelisted statements.
+ * @param {Array.<string>} whitelist An array of whitelisted statements.
  * @return {bool} If true, it has all of the whitelisted statements.
  * @private
  */
@@ -12,7 +27,7 @@ function hasWhitelisted_(tree, whitelist) {
   if (whitelist.length === 0) {
     return true;
   }
-  var body = tree['body'];
+  var body = getBody_(tree);
   if (!body) {
     return false;
   }
@@ -20,7 +35,7 @@ function hasWhitelisted_(tree, whitelist) {
   for (var i = 0; i < body.length; i++) {
     var node = body[i];
     // If is a whitelisted element, remove from array.
-    var whitelistIndex = _.indexOf(blacklist, node['type']);
+    var whitelistIndex = _.indexOf(whitelist, node['type']);
     if (whitelistIndex !== -1) {
       whitelist.splice(whitelistIndex, 1);
     }
@@ -39,7 +54,7 @@ function hasWhitelisted_(tree, whitelist) {
  * @private
  */
 function hasBlacklisted_(tree, blacklist) {
-  var body = tree['body'];
+  var body = getBody_(tree);
   if (!body) {
     return null;
   }
@@ -47,7 +62,7 @@ function hasBlacklisted_(tree, blacklist) {
   for (var i = 0; i < body.length; i++) {
     var node = body[i];
     // Search for blacklist
-    var blacklistIndex = blacklist.indexOf(node['type']);
+    var blacklistIndex = _.indexOf(blacklist, node['type']);
     if (blacklistIndex !== -1) {
       // TODO: Point to line number.
       return 'Sorry! Your code cannot have any ' + node['type'] + ' in it :(';
@@ -69,16 +84,40 @@ function hasBlacklisted_(tree, blacklist) {
  * @return {bool} If true, then the code follows the required structure.
  */
 function checkStructure_(tree, structure) {
-  var body = tree['body'];
+  var body = getBody_(tree);
   if (!body) {
-    return Object.keys(structure).length === 0;
+    return _.isEmpty(structure);
   }
 
+  // If the current node matches the current structure node, then we iterate
+  // through the structure node's children.
+  if (tree['type'] === structure['type']) {
+    var currentIndex = 0;
+    var structureChildren = structure['children'];
+    for (var i = 0; i < body.length; i++) {
+      if (!structureChildren ||
+          currentIndex >= structureChildren.length) {
+        return true;
+      }
+      if (checkStructure_(body[i], structureChildren[currentIndex])) {
+        currentIndex++;
+      }
+    }
+    if (currentIndex >= structureChildren.length) {
+      return true;
+    }
+  }
+
+  // If there's no success with the above, then we continue going down the tree
+  // to search for a subtree matching its structure.
   for (var i = 0; i < body.length; i++) {
     var node = body[i];
-    // TODO: Check structure.
+    if (checkStructure_(body[i], structure)) {
+      return true;
+    }
   }
 
+  return false;
 }
 
 /**
@@ -114,9 +153,10 @@ exports.validateCode = function(code, opt) {
   }
 
   if (opt['structure']) {
-    var structureErrorMsg = checkStructure_(parsedCode, opt['structure']);
-    if (structureErrorMsg) {
-      return structureErrorMsg;
+    var matchesStructure = checkStructure_(parsedCode, opt['structure']);
+    if (!matchesStructure) {
+      return "Hmm, your program's structure doesn't match with what I had " +
+      "hoped for.";
     }
   }
 

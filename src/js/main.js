@@ -5,6 +5,11 @@ $(function() {
   new Controller({
     'whitelist': ['ForStatement'],
     'blacklist': ['IfStatement'],
-    'structure': {}
+    'structure': {
+      'type': 'ForStatement',
+      'children': [{
+        'type': 'ForStatement',
+      }]
+    }
   });
 });
