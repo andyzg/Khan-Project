@@ -3,10 +3,6 @@
   "version": "1.0.0",
   "description": "Khan Academy's Interview project",
   "main": "main.js",
-  "scripts": {
-    "start": "watchify -v 1 src/js/main.js -o static/bundle.js",
-    "build": "browserify src/js/main.js | uglifyjs -c > static/bundle.js"
-  },
   "repository": {
     "type": "git",
     "url": "https://github.com/andyzg/Khan-Project.git"

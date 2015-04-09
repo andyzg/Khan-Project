@@ -5,6 +5,6 @@ $(function() {
   new Controller({
     'whitelist': ['ForStatement'],
     'blacklist': ['IfStatement'],
-    'has_structure': []
+    'structure': []
   });
 });
