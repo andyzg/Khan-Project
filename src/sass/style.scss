@@ -6,5 +6,21 @@
 body {
   div.container {
     margin-top: 100px;
+    #editor {
+      border: 1px solid rgba(0, 0, 0, 0.1);
+      display: block;
+      height: 300px;
+      position: relative;
+      width: 100%;
+    }
+    #message {
+      background-color: white;
+      border: 1px solid rgba(0, 0, 0, 0.1);
+      bottom: 0;
+      height: 300px;
+      right: 0;
+      top: 0;
+      width: 100%;
+    }
   }
 }

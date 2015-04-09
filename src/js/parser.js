@@ -132,7 +132,11 @@ function checkStructure_(tree, structure) {
  * @return {?string} An optional error message.
  */
 exports.validateCode = function(code, opt) {
-  var parsedCode = esprima.parse(code);
+  try {
+    var parsedCode = esprima.parse(code, {tolerant: true, loc: true});
+  } catch (e) {
+    return e.description;
+  }
 
   if (opt['whitelist']) {
     var whitelistedFuncs = opt['whitelist'].slice();

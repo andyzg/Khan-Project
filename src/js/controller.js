@@ -1,5 +1,6 @@
 var Editor = require('./editor.js');
 var parser = require('./parser.js');
+var $ = require('jquery');
 
 module.exports = (function() {
   var Controller = function(opts) {
@@ -9,17 +10,9 @@ module.exports = (function() {
 
   Controller.prototype.checkCode = function(code) {
     var errorMessage = parser.validateCode(code, this.opts_);
-    if (errorMessage) {
-      this.handleError(errorMessage);
-    } else {
-      alert('Success!');
-    }
+    console.log('Is checking.');
+    $('#message').text(errorMessage ? errorMessage : 'Success!');
   };
-
-  Controller.prototype.handleError = function(message) {
-    // Handle the error in a better way.
-    alert(message);
-  }
 
   return Controller;
 })();
