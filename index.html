@@ -2,12 +2,34 @@
 <html>
   <head>
     <title> Khan Project </title>
-    <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
     <link rel='stylesheet' type='text/css' href='static/style.css'>
     <script src='static/bundle.js'></script>
   </head>
   <body>
     <div class='container'>
+      <h2> JavaScript Code Analyzer </h2>
+      <p>
+        This editor will determine if certain aspects of your code is written
+        as expected. It analyzes the code through 3 validation tests:
+      </p>
+      <ul>
+        <li>
+          A whitelist of specific functionality. For example, the ability to
+          say "This program MUST use a 'for loop' and a 'variable declaration'."
+        </li>
+        <li>
+          A blacklist of specific functionality. For example, the ability to
+          say "This program MUST NOT use a 'while loop' or an 'if statement'."
+        </li>
+        <li>
+          Determine the rough structure of the program. For example, "There
+          should be a 'for loop' and inside of it there should be an 'if
+          statement'."
+        </li>
+      </ul>
+      <p>
+        Try it out!
+      </p>
       <div class='row'>
         <div class='nine columns'>
           <div id='editor'></div>
