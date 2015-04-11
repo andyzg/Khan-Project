@@ -10,14 +10,14 @@ var statement = require('./statement.js');
  * @private
  */
 function getBody(node) {
-  var body = node['body'];
+  var body = node.body;
   // If statements don't have bodies, they have consequences and alternates.
-  if (!body && node['type'] == statement.IF) {
+  if (!body && node.type == statement.IF) {
     // Body of an if statement.
-    body = [node['consequent']];
+    body = node.consequent;
     // Else statement if it exists.
-    if (node['alternate']) {
-      body.append(node['alternate']);
+    if (node.alternate) {
+      body.append(node.alternate);
     }
   }
   if (!body) {
@@ -45,7 +45,7 @@ function hasWhitelisted(tree, whitelist) {
   for (var i = 0; i < body.length; i++) {
     var node = body[i];
     // If is a whitelisted element, remove from array.
-    var whitelistIndex = _.indexOf(whitelist, node['type']);
+    var whitelistIndex = _.indexOf(whitelist, node.type);
     if (whitelistIndex !== -1) {
       whitelist.splice(whitelistIndex, 1);
     }
@@ -72,10 +72,10 @@ function hasBlacklisted(tree, blacklist) {
   for (var i = 0; i < body.length; i++) {
     var node = body[i];
     // Search for blacklist
-    var blacklistIndex = _.indexOf(blacklist, node['type']);
+    var blacklistIndex = _.indexOf(blacklist, node.type);
     if (blacklistIndex !== -1) {
       // TODO: Point to line number.
-      return 'Sorry! Your code cannot have any ' + node['type'] + ' in it :(';
+      return 'Sorry! Your code cannot have any ' + node.type + ' in it :(';
     }
 
     var errorMsg = hasBlacklisted(node, blacklist);
@@ -118,8 +118,8 @@ function checkStructure(tree, structure, structureIndex) {
   var sIndex = structureIndex;
   for (var i = 0; i < body.length; i++) {
     var node = body[i];
-    if (body[i]['type'] === structure[sIndex]['type'] &&
-        checkStructure(body[i], structure[sIndex]['children'], 0)) {
+    if (body[i].type === structure[sIndex].type &&
+        checkStructure(body[i], structure[sIndex].children, 0)) {
       sIndex++;
       if (sIndex >= structure.length) {
         return true;
@@ -129,8 +129,8 @@ function checkStructure(tree, structure, structureIndex) {
 
   // If this current node doesn't correspond to the current structure node,
   // then look for a child node that does.
-  for (var i = 0; i < body.length; i++) {
-    if (checkStructure(body[i], structure, structureIndex)) {
+  for (var j = 0; j < body.length; j++) {
+    if (checkStructure(body[j], structure, structureIndex)) {
       return true;
     }
   }
@@ -144,19 +144,20 @@ function checkStructure(tree, structure, structureIndex) {
  * - A blacklist, where it makes sure the code doesn't use certain statements.
  * - A structure check that makes sure the code follows a certain structure.
  * @param {string} code The code being checked.
- * @param {Object.<string,Array|Object>} opt An object containing the options. Field
- *    options are whitelist, blacklist, and structure
+ * @param {Object.<string,Array|Object>} opt An object containing the options.
+ *    Field options are whitelist, blacklist, and structure
  * @return {?string} An optional error message.
  */
 function validateCode(code, opt) {
+  var parsedCode = null;
   try {
-    var parsedCode = esprima.parse(code, {tolerant: true, loc: true});
+    parsedCode = esprima.parse(code, {tolerant: true, loc: true});
   } catch (e) {
     return e.description;
   }
 
-  if (opt['whitelist']) {
-    var whitelistedFuncs = opt['whitelist'].slice();
+  if (opt.whitelist) {
+    var whitelistedFuncs = opt.whitelist.slice();
     var isValid = hasWhitelisted(parsedCode, whitelistedFuncs);
     if (whitelistedFuncs.length !== 0) {
       // TODO: Fix the grammar in the error message.
@@ -166,15 +167,15 @@ function validateCode(code, opt) {
   }
 
   // TODO: Check for valid syntax
-  if (opt['blacklist']) {
-    var errorMessage = hasBlacklisted(parsedCode, opt['blacklist']);
+  if (opt.blacklist) {
+    var errorMessage = hasBlacklisted(parsedCode, opt.blacklist);
     if (errorMessage) {
       return errorMessage;
     }
   }
 
-  if (opt['structure']) {
-    var matchesStructure = checkStructure(parsedCode, opt['structure']);
+  if (opt.structure) {
+    var matchesStructure = checkStructure(parsedCode, opt.structure);
     if (!matchesStructure) {
       return "Hmm, your program's structure doesn't match with what I had " +
       "hoped for.";
@@ -182,7 +183,7 @@ function validateCode(code, opt) {
   }
 
   return null;
-};
+}
 
 module.exports = {
   getBody: getBody,
@@ -190,4 +191,4 @@ module.exports = {
   hasBlacklisted: hasBlacklisted,
   checkStructure: checkStructure,
   validateCode: validateCode
-}
+};
