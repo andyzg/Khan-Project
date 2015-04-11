@@ -33,16 +33,16 @@ function getBody(node) {
 
 /**
  * Ensures that the inputted code has all the statements in the whitelist.
- * @param {Object} tree The parsed tree of the code being inputted.
+ * @param {Object} node The current node of the code's AST being inputted.
  * @param {Array.<string>} whitelist An array of whitelisted statements.
  * @return {bool} If true, it has all of the whitelisted statements.
  * @private
  */
-function hasWhitelisted(tree, whitelist) {
+function hasWhitelisted(node, whitelist) {
   if (whitelist.length === 0) {
     return true;
   }
-  var body = getBody(tree);
+  var body = getBody(node);
   if (!body) {
     return false;
   }
@@ -63,13 +63,13 @@ function hasWhitelisted(tree, whitelist) {
 
 /**
  * Validates the code for the blacklist check.
- * @param {Object} tree The parsed tree of the code being inputted.
+ * @param {Object} node The current node of the code's AST being inputted.
  * @param {Array.<string>} blacklist An array of blacklisted statements.
  * @return {?string} An optional error message.
  * @private
  */
-function hasBlacklisted(tree, blacklist) {
-  var body = getBody(tree);
+function hasBlacklisted(node, blacklist) {
+  var body = getBody(node);
   if (!body) {
     return null;
   }
@@ -94,13 +94,13 @@ function hasBlacklisted(tree, blacklist) {
 
 /**
  * Checks if the parse tree is roughly the same structure as required.
- * @param {Object} tree The parse tree of the inputted code.
+ * @param {Object} node The current node of the code's AST being inputted.
  * @param {Array.<Object>} structure The structure required for the code.
  * @param {?number=} structureIndex The index of the current structure being
  *    matched.
  * @return {bool} If true, then the code follows the required structure.
  */
-function checkStructure(tree, structure, structureIndex) {
+function checkStructure(node, structure, structureIndex) {
   // No structure requirement means everything passes.
   if (!structure || structure.length === 0) {
     return true;
@@ -110,7 +110,7 @@ function checkStructure(tree, structure, structureIndex) {
     structureIndex = 0;
   }
 
-  var body = getBody(tree);
+  var body = getBody(node);
   if (!body) {
     return _.isEmpty(structure);
   }
@@ -154,16 +154,16 @@ function checkStructure(tree, structure, structureIndex) {
  * @return {?string} An optional error message.
  */
 function validateCode(code, opt) {
-  var parsedCode = null;
+  var ast = null;
   try {
-    parsedCode = esprima.parse(code, {tolerant: true, loc: true});
+    ast = esprima.parse(code, {tolerant: true, loc: true});
   } catch (e) {
     return e.message;
   }
 
   if (opt.whitelist) {
     var whitelistedFuncs = opt.whitelist.slice();
-    var isValid = hasWhitelisted(parsedCode, whitelistedFuncs);
+    var isValid = hasWhitelisted(ast, whitelistedFuncs);
     if (whitelistedFuncs.length !== 0) {
       // TODO: Fix the grammar in the error message.
       return 'Uh oh! Your program must have ' + whitelistedFuncs.join(' and ') +
@@ -172,14 +172,14 @@ function validateCode(code, opt) {
   }
 
   if (opt.blacklist) {
-    var errorMessage = hasBlacklisted(parsedCode, opt.blacklist);
+    var errorMessage = hasBlacklisted(ast, opt.blacklist);
     if (errorMessage) {
       return errorMessage;
     }
   }
 
   if (opt.structure) {
-    var matchesStructure = checkStructure(parsedCode, opt.structure);
+    var matchesStructure = checkStructure(ast, opt.structure);
     if (!matchesStructure) {
       return "Hmm, your program's structure doesn't match with what I had " +
       "hoped for.";
