@@ -10,7 +10,6 @@ module.exports = (function() {
 
   Controller.prototype.checkCode = function(code) {
     var errorMessage = parser.validateCode(code, this.opts_);
-    console.log('Is checking.');
     $('#message').text(errorMessage ? errorMessage : 'Success!');
   };
 
