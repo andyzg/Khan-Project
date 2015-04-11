@@ -1,10 +1,17 @@
 # Khan-Project
 Project for Khan Academy's interview
 
-### TODO
+### Installation
 
-- Write `parser.js` to parse a program and output a message.
-- Write `controller.js` to manage to all events of the web page.
-- Write `editor.js` and decorate with Ace
-- Style the web page
-- Add documentation
+You'll need npm and bundler for the installation. Run
+`make install`
+to install all dependencies.
+
+### Building the project
+
+Run `make local` to build the project locally.
+It uses browserify to bundle all of the js and compass for the SASS.
+
+### Testing
+
+To run tests, run `make test`.
