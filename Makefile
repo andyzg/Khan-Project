@@ -1,10 +1,11 @@
 local:
+	mkdir -p static
 	./local.sh
 
-build:
-	mkdir -p static
-	browserify src/js/main.js | uglifyjs -c > static/bundle.js
-	compass compile . --sass-dir=src/sass/ --css-dir=static --output compressed
-
 test:
-	mochify
+	jshint src/js/*
+	$(npm bin)/mochify
+
+install:
+	npm install
+	bundle install

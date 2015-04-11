@@ -1,3 +1,5 @@
+'use strict';
+
 var $ = require('jquery');
 var ace = require('brace');
 var _ = require('underscore');

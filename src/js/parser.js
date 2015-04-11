@@ -1,3 +1,5 @@
+'use strict';
+
 var esprima = require('esprima');
 var _ = require('underscore');
 var statement = require('./statement.js');

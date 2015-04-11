@@ -1,3 +1,5 @@
+'use strict';
+
 var Editor = require('./editor.js');
 var parser = require('./parser.js');
 var $ = require('jquery');
