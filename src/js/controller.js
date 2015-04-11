@@ -8,6 +8,7 @@ module.exports = (function() {
   var Controller = function(opts) {
     this.editor_ = new Editor(this);
     this.opts_ = opts ? opts : {};
+    $('#validation').html('<pre>' + JSON.stringify(opts, null, 2) + '</pre>');
   };
 
   Controller.prototype.checkCode = function(code) {

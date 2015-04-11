@@ -17,14 +17,31 @@ body {
       position: relative;
       width: 100%;
     }
-    #message {
+    .right-col {
       background-color: white;
       border: 1px solid rgba(0, 0, 0, 0.1);
       bottom: 0;
       height: 300px;
+      position: relative;
       right: 0;
       top: 0;
       width: 100%;
+
+      #validation {
+        height: 70%;
+        overflow: scroll;
+        pre {
+          font-size: 10px;
+        }
+      }
+      #message {
+        border-top: 1px solid rgba(0, 0, 0, 0.1);
+        bottom: 0;
+        font-size: 12px;
+        height: 30%;
+        position: absolute;
+        width: 100%;
+      }
     }
   }
 }

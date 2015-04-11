@@ -158,7 +158,7 @@ function validateCode(code, opt) {
   try {
     parsedCode = esprima.parse(code, {tolerant: true, loc: true});
   } catch (e) {
-    return e.description;
+    return e.message;
   }
 
   if (opt.whitelist) {
@@ -171,7 +171,6 @@ function validateCode(code, opt) {
     }
   }
 
-  // TODO: Check for valid syntax
   if (opt.blacklist) {
     var errorMessage = hasBlacklisted(parsedCode, opt.blacklist);
     if (errorMessage) {

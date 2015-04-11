@@ -8,6 +8,18 @@ $(function() {
   new Controller({
     whitelist: [],
     blacklist: [],
-    structure: []
+    structure: [{
+      type: statement.FOR
+    }, {
+      type: statement.FOR
+    }, {
+      type: statement.FOR
+    }, {
+      type: statement.FOR
+    }, {
+      type: statement.FOR
+    }, {
+      type: statement.FOR
+    }]
   });
 });
