@@ -14,10 +14,10 @@ function getBody(node) {
   // If statements don't have bodies, they have consequences and alternates.
   if (!body && node.type == statement.IF) {
     // Body of an if statement.
-    body = node.consequent;
+    body = [node.consequent];
     // Else statement if it exists.
     if (node.alternate) {
-      body.append(node.alternate);
+      body.push(node.alternate);
     }
   }
   if (!body) {
