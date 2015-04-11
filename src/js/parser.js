@@ -10,6 +10,9 @@ var statement = require('./statement.js');
  * @private
  */
 function getBody(node) {
+  if (!node) {
+    return null;
+  }
   var body = node.body;
   // If statements don't have bodies, they have consequences and alternates.
   if (!body && node.type == statement.IF) {
@@ -97,7 +100,7 @@ function hasBlacklisted(tree, blacklist) {
  */
 function checkStructure(tree, structure, structureIndex) {
   // No structure requirement means everything passes.
-  if (!structure) {
+  if (!structure || structure.length === 0) {
     return true;
   }
   // Optional argument, 0 by default.

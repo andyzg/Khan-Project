@@ -4,21 +4,8 @@ var statement = require('./statement.js');
 
 $(function() {
   new Controller({
-    whitelist: [statement.FOR],
+    whitelist: [],
     blacklist: [],
-    structure: [{
-      type: statement.FOR,
-      children: [{
-        type: statement.FOR,
-      }, {
-        type: statement.FOR,
-      }, {
-        type: statement.IF,
-        children: [{
-          type: statement.FOR
-        }]
-      }
-      ]
-    }]
+    structure: []
   });
 });
