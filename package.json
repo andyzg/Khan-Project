@@ -13,7 +13,7 @@
   },
   "homepage": "https://github.com/andyzg/Khan-Project",
   "dependencies": {
-    "acorn": "1.0.0",
+    "acorn": "1.0.3",
     "brace": "^0.5.1",
     "esprima": "^2.1.0",
     "jquery": "^2.1.3",
@@ -21,6 +21,7 @@
   },
   "devDependencies": {
     "browserify": "^9.0.7",
+    "mochify": "^2.7.1",
     "uglify-js": "^2.4.19",
     "watchify": "^3.1.0"
   }
