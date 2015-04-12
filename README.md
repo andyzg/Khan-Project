@@ -31,7 +31,7 @@ Esprima was a solid alternative. This was because it was more mature, and there 
 ### Current functionality
 
 
-The demo currently supports the following statements(listed in `src/js/statement.js':
+The demo currently supports the following statements(listed in `src/js/statement.js`):
 - For statements
 - While statements
 - If statements
