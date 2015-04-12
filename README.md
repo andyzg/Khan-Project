@@ -71,3 +71,7 @@ if (true) {
   for (;;) {}
 }
 ```
+
+### TODO's
+
+Minify the JavaScript code.
